@@ -1,0 +1,29 @@
+students:
+  - POST /students/add # Add student
+  - GET  /students # Get student list
+  - GET  /students/:id # Get single student
+  - PUT  /students/:id # Update student
+  - DELETE /students/:id # Delete student
+
+batches:
+  - POST /batches/add # Add batch
+  - GET  /batches # Get batch list
+
+attendance:
+  - POST /attendance/mark # Mark attendance
+  - GET  /attendance/report # Get attendance report
+
+fees:
+  - POST /fees/create-monthly # Create Monthly fee for all students
+  - POST /fees/quarterly -monthly # Create Quarterly  fee for all students
+  - POST /fees/semiannual -monthly # Create Semiannual  fee for all students
+  - POST /fees/annual-monthly # annual Annual fee for all students
+  - GET  /fees # Get fees list
+
+invoices:
+  - POST /invoices/generate # Generate invoice
+  - GET  /invoices # Get invoice list
+
+auth:
+  - POST /auth/login # Login
+  - POST /auth/refresh-token # Refresh token
