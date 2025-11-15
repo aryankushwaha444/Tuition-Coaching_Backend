@@ -1,0 +1,133 @@
+openapi: 3.0.0
+info:
+  title: Tuition/Coaching API
+  version: 1.0.0
+  description: APIs for Tuition/Coaching app
+
+servers:
+  - url: http://localhost:5000/api
+
+paths:
+
+  /auth/register:
+    post:
+      summary: Register new user into system
+  /auth/login:
+    post:
+      summary: Login user and get access + refresh token
+  /auth/refresh-token:
+    post:
+      summary: Refresh new access token using refresh token
+  /auth/logout:
+    post:
+      summary: Logout user and invalidate tokens
+  /auth/me:
+    get:
+      summary: Get details of logged in user
+
+  /students:
+    post:
+      summary: Add new student
+    get:
+      summary: Get list of all students
+  /students/{id}:
+    get:
+      summary: Get info of specific student
+    put:
+      summary: Update student info
+    delete:
+      summary: Delete student from system
+  /students/{id}/attendance:
+    get:
+      summary: View attendance of student
+  /students/{id}/fees:
+    get:
+      summary: View fee history for student
+  /students/{id}/invoices:
+    get:
+      summary: View all invoices for student
+
+  /batches:
+    post:
+      summary: Create new batch/class
+    get:
+      summary: Get all batches
+  /batches/{id}:
+    get:
+      summary: Get batch details
+    put:
+      summary: Update batch info
+    delete:
+      summary: Delete batch
+  /batches/{id}/students:
+    get:
+      summary: Get all students in batch
+  /batches/{id}/attendance:
+    get:
+      summary: Get batch attendance records
+
+  /attendance/mark:
+    post:
+      summary: Mark attendance for students
+
+  /fees:
+    get:
+      summary: Get all fees
+  /fees/student/{id}:
+    get:
+      summary: Get fee history of student
+  /fees/{id}:
+    put:
+      summary: Mark fee as paid
+
+  /invoices:
+    post:
+      summary: Generate new invoice
+    get:
+      summary: Get all invoices
+  /invoices/{id}:
+    get:
+      summary: Get invoice details
+    put:
+      summary: Cancel or update invoice
+  /invoices/student/{id}:
+    get:
+      summary: Get all invoices for student
+  /invoices/download/{id}:
+    get:
+      summary: Download invoice as pdf
+
+  /teachers:
+    post:
+      summary: Add new teacher
+    get:
+      summary: Get all teachers
+  /teachers/{id}:
+    get:
+      summary: Get teacher info
+    put:
+      summary: Update teacher info
+    delete:
+      summary: Delete teacher
+  /teachers/{id}/batches:
+    get:
+      summary: Get all batches of teacher
+
+  /exams:
+    post:
+      summary: Create new exam
+    get:
+      summary: Get all exams
+  /exams/{id}:
+    get:
+      summary: Get exam details
+    put:
+      summary: Update exam info
+    delete:
+      summary: Delete exam
+  /exams/{id}/results:
+    get:
+      summary: Get results for exam
+  /results/student/{id}:
+    get:
+      summary: View all exam results of student
