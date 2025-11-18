@@ -3,6 +3,7 @@ import express from "express";
 export function createStudentController(service) {
   const router = express.Router();
 
+  // Create student
   router.post("/", async (req, res, next) => {
     try {
       const student = await service.create(req.body);
@@ -12,6 +13,17 @@ export function createStudentController(service) {
     }
   });
 
+  // List all students
+  router.get("/", async (req, res, next) => {
+    try {
+      const students = await service.getAll();
+      res.json(students);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // Get single student by id
   router.get("/:id", async (req, res, next) => {
     try {
       const student = await service.getById(req.params.id);

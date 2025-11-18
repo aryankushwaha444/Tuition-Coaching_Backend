@@ -5,6 +5,11 @@ export class StudentService {
     this.repo = repository;
   }
 
+  async getAll() {
+    const students = await this.repo.findAll();
+    return students;
+  }
+
   async create(payload) {
     const { error, value } = validateStudent(payload);
     if (error) {

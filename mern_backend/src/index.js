@@ -5,7 +5,12 @@ const app = express();
 app.use(express.json());
 
 // Register routes
-app.use("/api", studentRoutes);
+app.use("/api/students", studentRoutes);
+
+app.get("/api/students", (req, res) => {
+    res.json({ message: "Server is up" });
+  });
+  
 
 // Global error handler
 app.use((err, req, res, next) => {
