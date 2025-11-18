@@ -1,55 +1,43 @@
-import express from "express";
+import service from "../services/student.service.js";
+import { studentSchema } from "../repositories/student.validation.js";
 
-export function createStudentController(service) {
-  const router = express.Router();
-
-  // Create student
-  router.post("/", async (req, res, next) => {
+export default {
+  async create(req, res, next) {
     try {
-      const student = await service.create(req.body);
-      res.status(201).json(student);
+      const { error } = studentSchema.validate(req.body);
+      if (error) return next(error);
+
+      const student = await service.createStudent(req.body);
+      res.status(201).json({ success: true, student });
     } catch (err) {
       next(err);
     }
-  });
+  },
 
-  // List all students
-  router.get("/", async (req, res, next) => {
+  async get(req, res, next) {
     try {
-      const students = await service.getAll();
-      res.json(students);
-    } catch (err) {
-      next(err);
-    }
-  });
-
-  // Get single student by id
-  router.get("/:id", async (req, res, next) => {
-    try {
-      const student = await service.getById(req.params.id);
+      const student = await service.getStudent(req.params.id);
       res.json(student);
     } catch (err) {
       next(err);
     }
-  });
+  },
 
-  router.put("/:id", async (req, res, next) => {
+  async update(req, res, next) {
     try {
-      const student = await service.update(req.params.id, req.body);
+      const student = await service.updateStudent(req.params.id, req.body);
       res.json(student);
     } catch (err) {
       next(err);
     }
-  });
+  },
 
-  router.delete("/:id", async (req, res, next) => {
+  async remove(req, res, next) {
     try {
-      await service.delete(req.params.id);
-      res.status(204).send();
+      await service.deleteStudent(req.params.id);
+      res.json({ message: "Student deleted" });
     } catch (err) {
       next(err);
     }
-  });
-
-  return router;
-}
+  },
+};

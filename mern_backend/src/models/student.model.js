@@ -1,15 +1,15 @@
-import Joi from "joi";
+import mongoose from "mongoose";
 
-export const studentSchema = Joi.object({
-  firstName: Joi.string().min(1).max(50).required(),
-  lastName: Joi.string().min(1).max(50).required(),
-  email: Joi.string().email().required(),
-  age: Joi.number().integer().min(5).max(100).required(),
-});
+const studentSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    phone: { type: String, required: true },
+    batch_id: { type: String, required: true },
+    fees: { type: Number, required: true },
+    due_amount: { type: Number, default: 0 },
+    join_date: { type: Date, default: Date.now },
+  },
+  { timestamps: true }
+);
 
-export function validateStudent(data) {
-  return studentSchema.validate(data, {
-    abortEarly: false,
-    stripUnknown: true,
-  });
-}
+export default mongoose.model("Student", studentSchema);

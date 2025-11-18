@@ -1,79 +1,21 @@
-import { validateStudent } from "../models/student.model.js";
+import repo from "../repositories/student.repository.js";
 
-export class StudentService {
-  constructor(repository) {
-    this.repo = repository;
-  }
+export default {
+  async createStudent(payload) {
+    return await repo.create(payload);
+  },
 
-  async getAll() {
-    const students = await this.repo.findAll();
-    return students;
-  }
-
-  async create(payload) {
-    const { error, value } = validateStudent(payload);
-    if (error) {
-      const e = new Error("Validation failed");
-      e.details = error.details.map((d) => d.message);
-      e.status = 400;
-      throw e;
-    }
-    // repository returns created record
-    return await this.repo.create(value);
-  }
-
-  async getById(id) {
-    if (!id) {
-      const e = new Error("Missing id");
-      e.status = 400;
-      throw e;
-    }
-    const student = await this.repo.findById(id);
-    if (!student) {
-      const e = new Error("Student not found");
-      e.status = 404;
-      throw e;
-    }
+  async getStudent(id) {
+    const student = await repo.findById(id);
+    if (!student) throw new Error("Student not found");
     return student;
-  }
+  },
 
-  async update(id, payload) {
-    if (!id) {
-      const e = new Error("Missing id");
-      e.status = 400;
-      throw e;
-    }
-    // validate partial payload by merging with existing field
-    const existing = await this.repo.findById(id);
-    if (!existing) {
-      const e = new Error("Student not found");
-      e.status = 404;
-      throw e;
-    }
-    const merged = { ...existing, ...payload };
-    const { error, value } = validateStudent(merged);
-    if (error) {
-      const e = new Error("Validation failed");
-      e.details = error.details.map((d) => d.message);
-      e.status = 400;
-      throw e;
-    }
-    return await this.repo.update(id, value);
-  }
+  async updateStudent(id, payload) {
+    return await repo.update(id, payload);
+  },
 
-  async delete(id) {
-    if (!id) {
-      const e = new Error("Missing id");
-      e.status = 400;
-      throw e;
-    }
-    const existing = await this.repo.findById(id);
-    if (!existing) {
-      const e = new Error("Student not found");
-      e.status = 404;
-      throw e;
-    }
-    const ok = await this.repo.delete(id);
-    return ok;
+  async deleteStudent(id) {
+    return await repo.delete(id);
   }
-}
+};
