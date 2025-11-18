@@ -11,6 +11,10 @@ export interface EnvSchema {
   PORT: number;
   DATABASE_URL: string;
   LOG_LEVEL: "error" | "warn" | "info";
+  JWT_ACCESS_TOKEN_SECRET: string;
+  JWT_ACCESS_TOKEN_EXPIRATION: string;
+  JWT_REFRESH_TOKEN_SECRET: string;
+  JWT_REFRESH_TOKEN_EXPIRATION: string;
 }
 
 // ------------------------------------------------------
@@ -21,6 +25,10 @@ const envSchema = Joi.object<EnvSchema>({
   PORT: Joi.number().default(3000),
   DATABASE_URL: Joi.string().uri().required(),
   LOG_LEVEL: Joi.string().valid("error", "warn", "info").default("info"),
+  JWT_ACCESS_TOKEN_SECRET: Joi.string().min(20).required(),
+  JWT_ACCESS_TOKEN_EXPIRATION: Joi.string().default("15m"),
+  JWT_REFRESH_TOKEN_SECRET: Joi.string().min(20).required(),
+  JWT_REFRESH_TOKEN_EXPIRATION: Joi.string().default("7d"),
 });
 
 export default envSchema;

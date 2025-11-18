@@ -3,6 +3,7 @@
 // ============================================================
 
 import Joi, { valid } from "joi";
+import APIError from "@/lib/api-error.lib";
 
 // ------------------------------------------------------
 // validate() — Validates a configuration object against a Joi schema
@@ -17,7 +18,13 @@ const validate = <T>(schema: Joi.ObjectSchema<T>, config: unknown) => {
 
   // If there is a validation error, throw an error with the details
   if (error) {
-    throw new Error(`Configuration validation error: ${error.message}`);
+    throw new APIError(500, "Configuration validation error", {
+      type: "ValidationError",
+      details: error.details.map((detail) => ({
+        field: detail.path.join("."),
+        message: detail.message,
+      })),
+    });
   }
 
   // Return the validated and sanitized configuration object

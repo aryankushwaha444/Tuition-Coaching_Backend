@@ -14,6 +14,13 @@ declare global {
   }
 
   type APIErrorType = string | ErrorType;
+
+  type Role = "student" | "admin" | "staff" | "accountant";
+
+  type TokenPayload = {
+    studentId?: string;
+    role?: Role;
+  };
 }
 
 export {};
