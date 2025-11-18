@@ -4,13 +4,13 @@
 class APIError extends Error {
   public readonly statusCode: number; // HTTP status code
   public readonly success: boolean; // Indicates if the operation was successful
-  public readonly error?: APIError; // Detailed error information
+  public readonly error?: APIErrorType; // Detailed error information
 
   // Constructor to initialize the APIError instance
   constructor(
     statusCode: number = 500,
     message: string = "Internal Server Error",
-    error?: APIError,
+    error?: APIErrorType,
     stack?: string
   ) {
     // Initialize the APIError instance with provided details

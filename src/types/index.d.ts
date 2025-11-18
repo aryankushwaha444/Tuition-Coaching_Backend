@@ -13,7 +13,7 @@ declare global {
     details?: ErrrorDetails[];
   }
 
-  type APIError = string | ErrorType;
+  type APIErrorType = string | ErrorType;
 }
 
 export {};
