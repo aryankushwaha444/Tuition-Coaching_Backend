@@ -1,0 +1,24 @@
+# Node.js dependencies
+
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Environment files
+.env
+
+# Build output
+dist/
+build/
+
+# OS generated files
+.DS_Store
+
+
+# IDE files
+.vscode/
