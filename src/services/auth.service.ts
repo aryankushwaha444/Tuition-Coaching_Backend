@@ -10,6 +10,7 @@ import {
   isStudentExistsWithEmail,
   registerStudent,
   findStudentByEmail,
+  deleteRefreshToken,
 } from "@/repositories/auth.repository";
 import {
   comparePasswords,
@@ -168,4 +169,54 @@ export const loginService = async (data: LoginBody) => {
     accessToken,
     refreshToken,
   };
+};
+
+// ------------------------------------------------------
+// logoutService() — Handles user logout logic
+// ------------------------------------------------------
+export const logoutService = async (token: string): Promise<boolean> => {
+  // Validate the provided refresh token
+  if (!token) {
+    // Log the error for missing refresh token
+    logger.error("Logout failed: No refresh token provided.", {
+      label: "AuthService",
+    });
+
+    // Throw an API error for missing refresh token
+    throw new APIError(400, "No refresh token provided", {
+      type: "InvalidRequest",
+      details: [
+        {
+          field: "refreshToken",
+          message: "Refresh token is required for logout",
+        },
+      ],
+    });
+  }
+
+  // Delete the refresh token from the database
+  const deleteCount = await deleteRefreshToken(token);
+
+  // If no token was deleted, it means the token was invalid
+  if (deleteCount === 0) {
+    // Log the error for invalid refresh token
+    logger.error("Logout failed: Invalid refresh token.", {
+      label: "AuthService",
+    });
+
+    // Throw an API error for invalid refresh token
+    throw new APIError(400, "Invalid refresh token", {
+      type: "InvalidToken",
+      details: [
+        {
+          field: "refreshToken",
+          message:
+            "The provided refresh token is invalid or already logged out",
+        },
+      ],
+    });
+  }
+
+  // Return true indicating successful logout
+  return true;
 };

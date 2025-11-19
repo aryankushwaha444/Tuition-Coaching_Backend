@@ -53,3 +53,14 @@ export const findStudentByEmail = async (email: string) => {
   // Find and return the student with the given email
   return await prisma.student.findUnique({ where: { email } });
 };
+
+// ------------------------------------------------------
+// deleteRefreshToken() — Deletes a refresh token from the database
+// ------------------------------------------------------
+export const deleteRefreshToken = async (token: string) => {
+  // Delete the token record and return the count of deleted records
+  const result = await prisma.token.deleteMany({ where: { token } });
+
+  // Return the number of deleted records
+  return result.count;
+};
