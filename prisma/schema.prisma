@@ -14,7 +14,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 // --------------------
 // ENUMS
 // --------------------
@@ -47,68 +46,66 @@ model Batch {
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
 
-  students   Student[]
+  students Student[]
 }
 
 // STUDENTS
 model Student {
-  id             Int        @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
   batch_id       Int?
   name           String
-  phone          String?    @db.VarChar(15)
-  email          String?    @db.VarChar(100) @unique
-  address        String?    @db.VarChar(255)
-  guardian_name  String?    @db.VarChar(100)
-  guardian_phone String?    @db.VarChar(15)
-  created_at     DateTime   @default(now())
-  updated_at     DateTime   @updatedAt
+  phone          String?  @db.VarChar(15)
+  email          String?  @unique @db.VarChar(100)
+  password       String?  @db.VarChar(20)
+  address        String?  @db.VarChar(100)
+  guardian_name  String?  @db.VarChar(100)
+  guardian_phone String?  @db.VarChar(15)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
 
-  batch      Batch?      @relation(fields: [batch_id], references: [id], onDelete: SetNull)
+  batch      Batch?       @relation(fields: [batch_id], references: [id], onDelete: SetNull)
   attendance Attendance[]
   fees       Fee[]
 }
 
-
 // ATTENDANCE
 model Attendance {
-  id              Int               @id @default(autoincrement())
+  id              Int              @id @default(autoincrement())
   student_id      Int
   attendance_date DateTime
-  status          AttendanceStatus  @default(present)
-  created_at      DateTime          @default(now())
-  updated_at      DateTime          @updatedAt
+  status          AttendanceStatus @default(present)
+  created_at      DateTime         @default(now())
+  updated_at      DateTime         @updatedAt
 
   student Student @relation(fields: [student_id], references: [id], onDelete: Cascade)
 }
 
 // FEES
 model Fee {
-  id           Int        @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   student_id   Int
-  amount       Decimal    @db.Decimal(10,2)
-  month_year   String     @db.VarChar(7)
+  amount       Decimal   @db.Decimal(10, 2)
+  month_year   String    @db.VarChar(7)
   due_date     DateTime?
   payment_date DateTime?
-  status       FeeStatus  @default(unpaid)
-  created_at   DateTime   @default(now())
-  updated_at   DateTime   @updatedAt
+  status       FeeStatus @default(unpaid)
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
 
-  student Student @relation(fields: [student_id], references: [id], onDelete: Cascade)
+  student Student  @relation(fields: [student_id], references: [id], onDelete: Cascade)
   invoice Invoice?
 }
 
 // INVOICES
 model Invoice {
   id             Int           @id @default(autoincrement())
-  fee_id         Int  @unique
+  fee_id         Int           @unique
   invoice_number String?
   issue_date     DateTime?
-  total_amount   Decimal       @db.Decimal(10,2)
+  total_amount   Decimal       @db.Decimal(10, 2)
   status         InvoiceStatus @default(unpaid)
   created_at     DateTime      @default(now())
   updated_at     DateTime      @updatedAt
 
   fee Fee @relation(fields: [fee_id], references: [id], onDelete: Cascade)
 }
-
-

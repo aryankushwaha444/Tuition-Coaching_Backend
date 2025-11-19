@@ -6,6 +6,7 @@ import { successResponse } from "@/utils/index.util";
 import { Router, type Response, type Request } from "express";
 import config from "@/config/env.config";
 import APIError from "@/lib/api-error.lib";
+import authRoute from "@/routes/auth.route";
 
 // Initialize the router
 const router: Router = Router();
@@ -52,6 +53,7 @@ router.route("/health").get((req: Request, res: Response) => {
     successResponse(res, 200, "Health Check Successful", {
       status: "ok", // health status
       service: " LTG Intern Management System", // service name
+      database: " connected", // database status
       uptime: process.uptime(), // system uptime
       memoryUsage: `${process.memoryUsage().heapUsed / 1024 / 1024} MB`, // memory usage
       timestamp: new Date().toISOString(), // current timestamp
@@ -79,6 +81,7 @@ router.route("/health").get((req: Request, res: Response) => {
 // ------------------------------------------------------
 // Index Routes
 // ------------------------------------------------------
+router.use("/api/v1/auth", authRoute);
 
 // ------------------------------------------------------
 // Not Found
