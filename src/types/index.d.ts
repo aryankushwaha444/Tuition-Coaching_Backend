@@ -18,7 +18,7 @@ declare global {
   type Role = "student" | "admin" | "staff" | "accountant";
 
   type TokenPayload = {
-    studentId: string;
+    studentId: number;
     role: Role;
   };
 
@@ -26,6 +26,12 @@ declare global {
     body?: Joi.ObjectSchema;
     query?: Joi.ObjectSchema;
     params?: Joi.ObjectSchema;
+  }
+
+  interface IToken {
+    student_id: number;
+    token: string;
+    expires_at: Date;
   }
 }
 
