@@ -1,8 +1,9 @@
 // ============================================================
 // 🧩 APP — Express application setup
 // ============================================================
-import express, { type Express } from "express";
+
 import cookieParser from "cookie-parser";
+import express, { type Express } from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import logger from "@/lib/logger.lib";
@@ -21,9 +22,9 @@ import globalErrorHandlerMiddleware from "./middleware/global-error-handler.midd
 // ------------------------------------------------------
 app.use(helmet());
 app.use(
-  morgan("combined", {
-    stream: { write: (message) => logger.info(message.trim()) },
-  })
+	morgan("combined", {
+		stream: { write: (message) => logger.info(message.trim()) },
+	}),
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
