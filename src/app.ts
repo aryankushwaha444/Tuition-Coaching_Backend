@@ -11,20 +11,20 @@ import logger from "@/lib/logger.lib";
 // Initialize the Express application
 const app: Express = express();
 
+import globalErrorHandlerMiddleware from "@/middleware/global-error-handler.middleware";
 // ------------------------------------------------------
 // Imports
 // ------------------------------------------------------
 import routes from "@/routes/index.route";
-import globalErrorHandlerMiddleware from "@/middleware/global-error-handler.middleware";
 
 // ------------------------------------------------------
 // Middlewares
 // ------------------------------------------------------
 app.use(helmet());
 app.use(
-  morgan("combined", {
-    stream: { write: (message) => logger.info(message.trim()) },
-  })
+	morgan("combined", {
+		stream: { write: (message) => logger.info(message.trim()) },
+	}),
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
