@@ -3,11 +3,11 @@
 // ============================================================
 
 declare global {
-  namespace Express {
-    interface Request {
-      student?: TokenPayload;
-    }
-  }
+	namespace Express {
+		interface Request {
+			student?: TokenPayload;
+		}
+	}
 }
 
 export {};

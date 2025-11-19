@@ -3,24 +3,24 @@
 // ============================================================
 
 declare global {
-  interface ErrrorDetails {
-    field?: string;
-    message?: string;
-  }
+	interface ErrrorDetails {
+		field?: string;
+		message?: string;
+	}
 
-  interface ErrorType {
-    type?: string;
-    details?: ErrrorDetails[];
-  }
+	interface ErrorType {
+		type?: string;
+		details?: ErrrorDetails[];
+	}
 
-  type APIErrorType = string | ErrorType;
+	type APIErrorType = string | ErrorType;
 
-  type Role = "student" | "admin" | "staff" | "accountant";
+	type Role = "student" | "admin" | "staff" | "accountant";
 
-  type TokenPayload = {
-    studentId: string;
-    role: Role;
-  };
+	type TokenPayload = {
+		studentId: string;
+		role: Role;
+	};
 }
 
 export {};
