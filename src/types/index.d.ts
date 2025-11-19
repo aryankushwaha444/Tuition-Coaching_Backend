@@ -18,8 +18,8 @@ declare global {
   type Role = "student" | "admin" | "staff" | "accountant";
 
   type TokenPayload = {
-    studentId?: string;
-    role?: Role;
+    studentId: string;
+    role: Role;
   };
 }
 
