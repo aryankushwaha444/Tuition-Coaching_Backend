@@ -15,16 +15,16 @@ const app: Express = express();
 // Imports
 // ------------------------------------------------------
 import routes from "@/routes/index.route";
-import globalErrorHandlerMiddleware from "./middleware/global-error-handler.middleware";
+import globalErrorHandlerMiddleware from "@/middleware/global-error-handler.middleware";
 
 // ------------------------------------------------------
 // Middlewares
 // ------------------------------------------------------
 app.use(helmet());
 app.use(
-	morgan("combined", {
-		stream: { write: (message) => logger.info(message.trim()) },
-	}),
+  morgan("combined", {
+    stream: { write: (message) => logger.info(message.trim()) },
+  })
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
