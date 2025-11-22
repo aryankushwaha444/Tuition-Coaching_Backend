@@ -1,6 +1,10 @@
-import { app } from "./app.js";
-import { PORT } from "./config/config.env.js";
+import { app } from "./app";
+import { PORT } from "./config/config.env";
+import { checkDBConnection } from "./utils/db";
 
-app.listen(PORT, () => {
-  console.log(`Serving on http://localhost:${PORT}`);
-});
+checkDBConnection().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Serving on http://localhost:${PORT}`);
+  });
+})
+

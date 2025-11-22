@@ -1,8 +1,10 @@
 import { Router } from "express"
-import studentRoutes from "./student.routes.js"
+import studentRoutes from "./student.routes"
+import authRoutes from "./auth.routes"
 
 const router = Router()
 
-router.use("/student",studentRoutes)
+router.use("/auth", authRoutes)
+router.use("/student", studentRoutes)
 
 export default router

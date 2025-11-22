@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import ErrorHandler from "../utils/ErrorHandler";
+import { Prisma } from "@prisma/client";
 
-export const ErrorMiddleware = (
+export const errorMiddleware = (
   err: any,
   req: Request,
   res: Response,
@@ -10,16 +11,17 @@ export const ErrorMiddleware = (
   err.statusCode = err.statusCode || 500;
   err.message = err.message || "Internal server error";
 
-  // wrong mongodb id error
-  if (err.name === "CastError") {
-    const message = `Resource not found. Invalid: ${err.path}`;
-    err = new ErrorHandler(message, 400);
-  }
-
-  // Duplicate key error
-  if (err.code === 11000) {
-    const message = `Duplicate ${Object.keys(err.keyValue)} entered`;
-    err = new ErrorHandler(message, 400);
+  // Prisma Unique Constraint Violation
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    if (err.code === 'P2002') {
+      const message = `Duplicate field value entered`;
+      err = new ErrorHandler(message, 400);
+    }
+    // Record not found
+    if (err.code === 'P2025') {
+      const message = `Resource not found`;
+      err = new ErrorHandler(message, 404);
+    }
   }
 
   // wrong jwt error
