@@ -4,6 +4,7 @@ import morgan from "morgan";
 import indexRoutes from "./routes/index.routes"
 import dotenv from "dotenv";
 import { errorMiddleware } from "./middlewares/error.middleware";
+import cookieParser from "cookie-parser"
 dotenv.config();
 export const app = express();
 
@@ -28,7 +29,9 @@ app.use(
         },
     })
 );
+app.use(cookieParser())
 app.use("/api/v1", indexRoutes)
+
 app.use(cors({
     credentials: true
 }))

@@ -1,6 +1,7 @@
 import { db } from "./prisma";
 
 
+
 async function main() {
   const teacherUser = await db.user.create({
     data: {

@@ -16,3 +16,18 @@ export const getUserById = async (id: string) => {
 export const deleteUser = async (id: string) => {
     return await db.user.delete({ where: { user_id: id } })
 }
+
+export const findUserByEmail = async (email: string) => {
+    return await db.user.findUnique({ where: { email } })
+}
+
+export const findUserByUsernameOrEmail = async (username: string, email: string) => {
+    return await db.user.findFirst({
+        where: {
+            OR: [
+                { username: username },
+                { email: email }
+            ]
+        }
+    })
+}

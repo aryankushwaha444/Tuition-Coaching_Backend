@@ -1,90 +1,94 @@
-import bcrypt from "bcrypt";
-import { StudentRepository } from "../repositories/student.repository";
+import {
+    createStudent,
+    findAllStudents,
+    findStudentById,
+    updateStudent,
+    deleteStudent,
+    findStudentByUserId
+} from "../repositories/student.repository";
+import { getUserById } from "../repositories/user.repository";
 import ErrorHandler from "../utils/ErrorHandler";
-import { db } from "../utils/prisma";
+import { createStudentSchema, updateStudentSchema } from "../validators/student.validator";
 
-export class StudentService {
-    private studentRepository: StudentRepository;
+export const createStudentService = async (data: any) => {
 
-    constructor() {
-        this.studentRepository = new StudentRepository();
+    const { error } = createStudentSchema.validate(data);
+    if (error) throw new ErrorHandler(error.details[0].message, 400);
+
+    const {
+        user_id,
+        batch_id,
+        date_of_birth,
+        gender,
+        parent_name,
+        parent_contact,
+        address,
+        fees,
+        due_amount
+    } = data;
+
+    const user = await getUserById(user_id);
+    if (!user) throw new ErrorHandler("User not found", 404);
+
+
+    const existingStudent = await findStudentByUserId(user_id);
+
+
+
+    if (existingStudent) throw new ErrorHandler("Student profile already exists for this user", 400);
+
+    const studentData = {
+        user_id,
+        batch_id,
+        date_of_birth: date_of_birth ? new Date(date_of_birth) : undefined,
+        gender,
+        parent_name,
+        parent_contact,
+        Address: address,
+        fees,
+        due_amount,
+        enrolled_date: new Date(),
+        status: "Active"
+    };
+
+    return await createStudent(studentData);
+};
+
+export const getAllStudentsService = async (
+    page: number = 1,
+    limit: number = 10,
+    search?: string
+) => {
+    const skip = (page - 1) * limit;
+    const where: any = {};
+
+    if (search) {
+        where.OR = [
+            { user: { full_name: { contains: search } } },
+            { user: { email: { contains: search } } }
+        ];
     }
 
-    async createStudent(data: any) {
-        const {
-            user_id,
-            batch_id,
-            date_of_birth,
-            gender,
-            parent_name,
-            parent_contact,
-            address,
-            fees,
-            due_amount,
-        } = data;
+    return await findAllStudents(skip, limit, where);
+};
 
-        const user = await db.user.findUnique({ where: { user_id } });
-        if (!user) {
-            throw new ErrorHandler("User not found", 404);
-        }
+export const getStudentByIdService = async (id: string) => {
+    const student = await findStudentById(id);
+    if (!student) throw new ErrorHandler("Student not found", 404);
+    return student;
+};
 
-        const existingStudent = await db.student.findUnique({ where: { user_id } });
-        if (existingStudent) {
-            throw new ErrorHandler("Student profile already exists for this user", 400);
-        }
+export const updateStudentService = async (id: string, data: any) => {
+    const { error } = updateStudentSchema.validate(data);
+    if (error) throw new ErrorHandler(error.details[0].message, 400);
 
-        const studentData = {
-            user_id,
-            batch_id,
-            date_of_birth: date_of_birth ? new Date(date_of_birth) : undefined,
-            gender,
-            parent_name,
-            parent_contact,
-            Address: address,
-            fees,
-            due_amount,
-            enrolled_date: new Date(),
-            status: "Active",
-        };
+    const updated = await updateStudent(id, data);
+    if (!updated) throw new ErrorHandler("Student not found", 404);
+    return updated;
+};
 
-        return await this.studentRepository.create(studentData);
-    }
-
-    async getAllStudents(page: number = 1, limit: number = 10, search?: string) {
-        const skip = (page - 1) * limit;
-        const where: any = {};
-
-        if (search) {
-            where.OR = [
-                { user: { full_name: { contains: search } } },
-                { user: { email: { contains: search } } },
-            ];
-        }
-
-        return await this.studentRepository.findAll(skip, limit, where);
-    }
-
-    async getStudentById(id: string) {
-        const student = await this.studentRepository.findById(id);
-        if (!student) {
-            throw new ErrorHandler("Student not found", 404);
-        }
-        return student;
-    }
-
-    async updateStudent(id: string, data: any) {
-        const student = await this.studentRepository.update(id, data);
-        if (!student) {
-            throw new ErrorHandler("Student not found", 404);
-        }
-        return student;
-    }
-
-    async deleteStudent(id: string) {
-        const student = await this.studentRepository.delete(id);
-        if (!student) {
-            throw new ErrorHandler("Student not found", 404);
-        }
-        return { message: "Student deleted successfully" };
-    }
-}
+export const deleteStudentService = async (id: string) => {
+    const deleted = await deleteStudent(id);
+    if (!deleted) throw new ErrorHandler("Student not found", 404);
+    return { message: "Student deleted successfully" };
+};
